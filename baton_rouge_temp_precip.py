@@ -51,3 +51,18 @@ df['precip'] = pd.to_numeric(df.precip)
 #Set the index to the datetime object 
 df.set_index('date', inplace=True)
 
+#Group together the monthly average high/low temperatures 
+avg_high = df.groupby(pd.Grouper(freq='M')).mean()['high']
+avg_low = df.groupby(pd.Grouper(freq='M')).mean()['low']
+
+#Calculate the total monthly precipitation 
+total_precip = df.groupby(pd.Grouper(freq='M')).sum()['precip']
+
+#Create a summary dataframe containing all the average/total values 
+summary_df = pd.DataFrame(avg_high)
+summary_df['low'] = avg_low
+summary_df['precip'] = total_precip 
+summary_df.index = [datetime.date.strftime(x, '%Y-%m') for x in summary_df.index]
+
+#Export the dataframe to a text file 
+summary_df.to_csv('LSU_Grad_App.txt',header=False,float_format='%.2f')
