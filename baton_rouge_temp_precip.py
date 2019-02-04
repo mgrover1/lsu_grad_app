@@ -87,3 +87,62 @@ fig1 = fig1.get_figure()
 plt.xlabel('Month')
 plt.ylabel('Liquid Precipitation (Inches)')
 fig1.savefig('total_precip.png', dpi=300)
+
+#Part 2 
+#Create interactive bar graphs and a table using bokeh, a java-based python library 
+
+#Set an output file for the interative graphs 
+output_file('Summary_Table.html')
+
+#Create a list of months to be listed on the x-axis 
+x = list(summary_df.index)
+
+#Create a figure for the monthly high/low temperatures 
+p = figure(x_range=x,title='Average Monthly Temperatures Baton Rouge, LA', plot_width=700, plot_height=500)
+p.xaxis.axis_label = "Month"
+p.yaxis.axis_label = "Temperature (F)"
+
+#Plot the average monthly high temperature 
+p.vbar(x=x, top=summary_df.high, color='red', width=0.9, legend='High Temperature') 
+
+#Plot the average monthly low temperature
+p.vbar(x=x, top=summary_df.low, color='blue', width=0.9, legend='Low Temperature') 
+
+#Create a second figure that plots the total precipitation for each month
+p1 = figure(x_range=x,title='Average Total Precipitation Baton Rouge, LA', plot_width=700, plot_height=500)
+p1.xaxis.axis_label = "Month"
+p1.yaxis.axis_label = "Total Liquid Precip (Inches)"
+
+#Plot the bars for the total precip
+p1.vbar(x=x, top=summary_df.precip, color='green', width=0.9) 
+
+#Create a dictionary with the values from the summary dataframe
+data = dict(
+        dates = summary_df.index,
+        high = summary_df.high,
+        low = summary_df.low,
+        precip = summary_df.low,
+    )
+
+#Convert the dictionary to column data source format to be read into the table 
+data = ColumnDataSource(data)
+
+#Set the column titles 
+columns = [
+        TableColumn(field="dates", title="Month"),
+        TableColumn(field="high", title="Average High Temperature"),
+        TableColumn(field="low", title="Average Low Temperature"),
+        TableColumn(field="precip", title="Total Precipitation"),
+    ]
+
+#Create the data table 
+data_table = DataTable(source=data, columns=columns,width=1400, height=500)
+
+#Set the layout of the graphs and table 
+l = layout([
+  [p,p1],
+  [widgetbox(data_table)],
+],)
+
+#Show the html file created from Bokeh 
+show(l)
