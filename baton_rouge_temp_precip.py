@@ -66,3 +66,24 @@ summary_df.index = [datetime.date.strftime(x, '%Y-%m') for x in summary_df.index
 
 #Export the dataframe to a text file 
 summary_df.to_csv('LSU_Grad_App.txt',header=False,float_format='%.2f')
+
+#Create a bar graph for the monthly average high temperature 
+fig1 = summary_df.high.plot.bar(title='Monthly Average High Temperature at Baton Rouge Airport', color ='r', figsize=(10,8))
+fig1 = fig1.get_figure()
+plt.xlabel('Month')
+plt.ylabel('Temperature (F)')
+fig1.savefig('avg_high_temp.png', dpi=300)
+
+#Create a bar graph for the monthly average low temperature 
+fig1 = summary_df.low.plot.bar(title='Monthly Average Low Temperature at Baton Rouge Airport', color ='b', figsize=(10,8))
+fig1 = fig1.get_figure()
+plt.xlabel('Month')
+plt.ylabel('Temperature (F)')
+fig1.savefig('avg_low_temp.png', dpi=300)
+
+#Create a bar graph for the monthly total precipitation
+fig1 = summary_df.precip.plot.bar(title='Monthly Total Precipitation at Baton Rouge Airport', color ='g', figsize=(10,8))
+fig1 = fig1.get_figure()
+plt.xlabel('Month')
+plt.ylabel('Liquid Precipitation (Inches)')
+fig1.savefig('total_precip.png', dpi=300)
