@@ -27,3 +27,27 @@ parsed_json = json.loads(f)
 
 #Extract the data from the parsed json file 
 data = parsed_json['data']
+
+#Create a dataframe to store the temp/precip data from the json file 
+df = pd.DataFrame(data, columns=['date','high','low','precip'])
+
+#Convert the date to datetime 
+df['date'] = pd.to_datetime(df.date, format = '%Y/%m')
+
+#Convert the string for high temperature to a numeric value
+df['high'] = pd.to_numeric(df.high)
+
+#Convert the string for low temperature to a numeric value
+df['low'] = pd.to_numeric(df.low)
+
+#Convert the "Trace" values to 0 then convert all values to numeric 
+for i in range(len(df)):
+    if df['precip'][i] == 'T':
+        df['precip'][i] = 0.00
+    else: 
+        df['precip'][i] = df['precip'][i]
+df['precip'] = pd.to_numeric(df.precip)
+
+#Set the index to the datetime object 
+df.set_index('date', inplace=True)
+
